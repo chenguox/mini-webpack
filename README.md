@@ -38,3 +38,16 @@ const options = getOptions(this)
 
 console.log(this.query);
 ```
+
+
+
+
+* **安装 babel 的核心 *
+
+**npm install @babel/core -D**
+
+
+
+3. **安装babel的预处理，并配置webpack文件**
+
+> **npm install @babel/preset-env -D**

@@ -1,3 +1,4 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require("path");
 
 module.exports = {
@@ -23,8 +24,15 @@ module.exports = {
           }
         },
       },
+      {
+        test: /\.md$/i,
+        use: ['md-loader']
+      }
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin()
+  ],
   // 默认会去 node_module 查找 loader，但是我们自定义的loader在my-loader文件夹，所以需要配置一下
   resolveLoader: {
     modules: ["node_module", "./my-loader"],

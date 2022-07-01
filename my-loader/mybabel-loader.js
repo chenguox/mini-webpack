@@ -6,9 +6,6 @@ const rule = require('../my-schema/mybabel-schema.json')
 const babel = require('@babel/core')
 
 module.exports = function (content) {
-  // 设置为异步的loader,来执行回调
-  const callback = this.async()
-
   // webpack5 可以通过 this.query 获取参数
   const options = this.query
 
@@ -16,6 +13,9 @@ module.exports = function (content) {
   validate(rule, options, {
     name: 'mybabel-loader'
   })
+
+  // 设置为异步的loader,来执行回调
+  const callback = this.async()
 
   // 将 es6 代码转为 es5代码
   babel.transform(content, options, (err, result) => {

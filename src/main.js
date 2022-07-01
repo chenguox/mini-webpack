@@ -1,6 +1,13 @@
-const foo = () => {
-  let name = 'aaa'
-  console.log('foo',name)
-}
+// const foo = () => {
+//   let name = 'aaa'
+//   console.log('foo',name)
+// }
 
-foo()
+// foo()
+
+import code from './doc.md'
+
+// 可以打印查看一下我们的内容
+console.log(code);
+
+document.body.innerHTML = code
