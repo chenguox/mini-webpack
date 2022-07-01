@@ -14,9 +14,13 @@ module.exports = {
         // 匹配后缀为 js 的文件，使用 cgx-loader 进行处理
         test: /\.js$/i,
         use: {
-          loader: "cgx-loader",
-          // 没有配置 resolveLoader 需要这样写
-          // "./my-loader/cgx-loader.js"
+          loader: "mybabel-loader",
+          // 没有配置 resolveLoader 需要写明路径
+          // "./my-loader/mybabel-loader.js"
+          options: {
+            // 传递参数
+            presets: ['@babel/preset-env'],
+          }
         },
       },
     ],
