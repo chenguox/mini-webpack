@@ -5,7 +5,7 @@
 * mybabel-loader 的实现
 * md-loader 的实现
 
-```
+```js
 console.log("Hello World")
 
 const message = "Hello World";

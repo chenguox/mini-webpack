@@ -27,7 +27,11 @@ module.exports = {
       {
         test: /\.md$/i,
         use: ['md-loader']
-      }
+      },
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader']
+      },
     ],
   },
   plugins: [
@@ -35,6 +39,6 @@ module.exports = {
   ],
   // 默认会去 node_module 查找 loader，但是我们自定义的loader在my-loader文件夹，所以需要配置一下
   resolveLoader: {
-    modules: ["node_module", "./my-loader"],
+    modules: ["node_modules", "./my-loader"],
   },
 };
