@@ -1,5 +1,9 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require("path");
+// 测试创建的 BasePlugin
+const BasePlugin = require('./my-plugin/base-plugin')
+// 测试创建的 GenerateMdPlugin
+const GenerateMdPlugin = require('./my-plugin/generate-md-plugin')
 
 module.exports = {
   // 打包会默认是 production, 会默认帮我们做一些处理，设置为 development 可以避免一些影响
@@ -35,7 +39,12 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin()
+    new HtmlWebpackPlugin(),
+    // 测试我们创建的 BasePlugin
+    new BasePlugin({
+      title: 'base-plugin'
+    }),
+    new GenerateMdPlugin()
   ],
   // 默认会去 node_module 查找 loader，但是我们自定义的loader在my-loader文件夹，所以需要配置一下
   resolveLoader: {

@@ -28,3 +28,4 @@ class LearnTapable {
 // event1 有返回值，所以不会执行 event2
 const lt = new LearnTapable()
 lt.emit()
+// event1 小明 18

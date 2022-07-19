@@ -26,3 +26,5 @@ class LearnTapable {
 // 同步的 SyncHook, 会依次触发事件 event1 和 event2
 const lt = new LearnTapable();
 lt.emit();
+// event1 小明 18
+// event2 小明 18

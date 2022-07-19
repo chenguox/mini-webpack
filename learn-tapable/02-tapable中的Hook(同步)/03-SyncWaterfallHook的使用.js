@@ -24,3 +24,5 @@ class LearnTapable {
 
 const lt = new LearnTapable()
 lt.emit()
+// event1 小明 18
+// event2 event1~
