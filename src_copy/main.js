@@ -13,4 +13,6 @@ import 'highlight.js/styles/default.css'
 // 可以打印查看一下我们的内容
 console.log(code);
 
+console.log("======================",process.env)
+
 document.body.innerHTML = code

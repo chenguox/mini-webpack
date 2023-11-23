@@ -2,6 +2,8 @@ const { marked } = require("marked")
 const hljs = require('highlight.js')
 
 module.exports = function (content) {
+  console.log(content)
+  console.log("======================",process.env)
   // 给 code 代码添加类名
   marked.setOptions({
     highlight: function (code, lang) {

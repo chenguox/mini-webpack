@@ -1,61 +1,29 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const path = require("path");
-// 测试创建的 BasePlugin
-const BasePlugin = require('./my-plugin/base-plugin')
-// 测试创建的 GenerateMdPlugin
-const GenerateMdPlugin = require('./my-plugin/generate-md-plugin');
-// 测试创建的 SendEmailPlugin
-const SendEmailPlugin = require('./my-plugin/send-email-plugin');
+// ./webpack.config.js
+const path = require('path');
+const CustomWebpackPlugin = require('./plugins/custom-webpack-plugin.js');
 
 module.exports = {
-  // 打包会默认是 production, 会默认帮我们做一些处理，设置为 development 可以避免一些影响
-  mode: "development",
-  entry: "./src/main.js",
+  entry: {
+    entry1: path.resolve(__dirname, './src/entry1.js'),
+    entry2: path.resolve(__dirname, './src/entry2.js'),
+  },
+  context: process.cwd(),
   output: {
-    filename: "bundle.js",
-    path: path.resolve(__dirname, "./build"),
+    path: path.resolve(__dirname, './build'),
+    filename: '[name].js',
+  },
+  plugins: [new CustomWebpackPlugin()],
+  resolve: {
+    extensions: ['.js', '.ts'],
   },
   module: {
     rules: [
       {
-        // 匹配后缀为 js 的文件，使用 cgx-loader 进行处理
-        test: /\.js$/i,
-        use: {
-          loader: "mybabel-loader",
-          // 没有配置 resolveLoader 需要写明路径
-          // "./my-loader/mybabel-loader.js"
-          options: {
-            // 传递参数
-            presets: ['@babel/preset-env'],
-          }
-        },
-      },
-      {
-        test: /\.md$/i,
-        use: ['md-loader']
-      },
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader']
+        test: /\.js/,
+        use: [
+          path.resolve(__dirname, './loaders/transformArrowFnLoader.js'), // 转换箭头函数
+        ],
       },
     ],
   },
-  plugins: [
-    new HtmlWebpackPlugin(),
-    // 测试我们创建的 BasePlugin
-    new BasePlugin({
-      title: 'base-plugin'
-    }),
-    new GenerateMdPlugin(),
-    // new SendEmailPlugin({
-    //   fromEmail: 'q15@163.com', // 发送方的邮箱
-    //   password: 'C',// 如果是QQ邮箱，则为QQ邮箱授权码
-    //   toEmail: '529@qq.com', // 接收方邮箱
-    //   host: 'smtp.163.com' // QQ邮箱服务器 smtp.qq.com
-    // })
-  ],
-  // 默认会去 node_module 查找 loader，但是我们自定义的loader在my-loader文件夹，所以需要配置一下
-  resolveLoader: {
-    modules: ["node_modules", "./my-loader"],
-  },
-};
+}

@@ -17,7 +17,7 @@ module.exports = function (content) {
   // 设置为异步的loader,来执行回调
   const callback = this.async()
 
-  // 将 es6 代码转为 es5代码
+  // 将 es6 代码转为 es5代码，做异步的事
   babel.transform(content, options, (err, result) => {
     if (err) {
       callback(err)
