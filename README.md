@@ -874,6 +874,55 @@ lt.emit()
 
 ## 最后文末
 
+在终端执行以下命令，就可以看到我们打包的产物啦~
+
+```shell
+node build.js
+```
+
+![](https://codercgx-1308086317.cos.ap-nanjing.myqcloud.com/code/202311241418913.png)
+
+```js
+// entry1.js
+(() => {
+  var __webpack_modules__ = {
+    "./src/module.js": (module) => {
+      const name = "cgx";
+      module.exports = {
+        name,
+      };
+    },
+  };
+  var __webpack_module_cache__ = {};
+
+  function __webpack_require__(moduleId) {
+    var cachedModule = __webpack_module_cache__[moduleId];
+    if (cachedModule !== undefined) {
+      return cachedModule.exports;
+    }
+    var module = (__webpack_module_cache__[moduleId] = {
+      exports: {},
+    });
+
+    __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+
+    return module.exports;
+  }
+
+  (() => {
+    const module = __webpack_require__("./src/module.js");
+    const start = function () {
+      return "start";
+    };
+    start();
+    console.log("entry1 module: ", module);
+  })();
+})();
+
+```
+
+
+
 相信学完，你对 webpack 的打包思路有了清晰的认识。
 
 感谢阅读~
