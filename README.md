@@ -115,7 +115,6 @@ module.exports = {
 7、编写 webpack 的核心入口文件，来实现打包逻辑。
 
 ```js
-// cd webpack-demo
 mkdir lib && cd lib
 touch webpack.js // webpack 入口文件
 touch compiler.js // webpack 核心编译器
