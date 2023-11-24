@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/chenguox/learn-loader-plugin#readme",
   "devDependencies": {
+    "@babel/core": "^7.23.3",
     "@babel/generator": "^7.23.4",
     "@babel/parser": "^7.23.4",
+    "@babel/preset-env": "^7.23.3",
     "@babel/traverse": "^7.23.4",
     "@babel/types": "^7.23.4",
     "fs-extra": "^11.1.1",

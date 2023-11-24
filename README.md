@@ -1,38 +1,54 @@
-# learn-loader-plugin
+# Mini-Webpack
 
-## 描述
+## 项目简述
 
 该项目实现了一个简单的 webpack，并编写了 loader 和 plugin 完成项目的打包。
 
 
 
+## 工作流程
+
+webpack 构建的核心任务是完成**内容转化**和**资源合并**。主要包含以下3个阶段：
+
+1. 初始化阶段
+
+
+
+2. 构建阶段
+
+
+
+3. 生成阶段
+
+
+
 ## 准备工作
 
-创建仓库
+1、先创建仓库 mini-webpack，并对项目初始化。
 
 ```shell
 mkdir mini-webpack && npm init -y
 ```
 
-安装 babel 相关依赖 ，用于将源代码解析为 AST，进行模块依赖收集和代码改写。
+2、安装 babel 相关依赖 ，用于将源代码解析为 **AST**，进行模块**依赖收集**和**代码改写**。
 
 ```shell
 npm install @babel/parser @babel/traverse @babel/types @babel/generator -D 
 ```
 
-安装 tapable（注册/触发事件流）和 fs-extra 文件操作依赖 ，tapable 用来提供 Hooks 机制来接入插件进行工作
+3、安装 tapable（注册/触发事件流）和 fs-extra 文件操作依赖 ，tapable 用来提供 **Hooks 机制**来接入**插件**进行工作。
 
 ```shell
 npm install tapable fs-extra -D
 ```
 
-创建 src 目录，并在该目录下新建两个入口文件和一个公共模块文件
+4、创建 src 目录，并在该目录下新建两个入口文件和一个公共模块文件，用于最后的打包测试
 
 ```shell
 mkdir src && cd src && touch entry1.js && touch entry2.js && touch module.js
 ```
 
-给 entry1、entry2 和 module.js 文件写入以下内容：
+5、给 entry1、entry2 和 module.js 文件写入以下内容：
 
 ```js
 // src/entry1.js
@@ -54,7 +70,7 @@ module.exports = {
 };
 ```
 
-创建配置文件（webpack.config.js）, 写入以下配置：
+6、创建配置文件（webpack.config.js）, 写入以下配置：
 
 ```js
 // ./webpack.config.js
@@ -88,7 +104,7 @@ module.exports = {
 };
 ```
 
-编写 webpack 的核心入口文件，来实现打包逻辑。
+7、编写 webpack 的核心入口文件，来实现打包逻辑。
 
 ```js
 // cd webpack-demo
@@ -98,8 +114,6 @@ touch compiler.js // webpack 核心编译器
 touch compilation.js // webpack 核心编译对象
 touch utils.js // 工具函数
 ```
-
-
 
 
 
