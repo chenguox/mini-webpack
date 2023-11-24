@@ -12,7 +12,8 @@ module.exports = {
     path: path.resolve(__dirname, './build'),
     filename: '[name].js',
   },
-  plugins: [new CustomWebpackPlugin()],
+  // plugins: [new CustomWebpackPlugin()],
+  plugins: [],
   resolve: {
     extensions: ['.js', '.ts'],
   },

@@ -9,5 +9,5 @@ compiler.run((err, stats) => {
   if (err) {
     console.log(err, 'err')
   }
-  console.log('构建完成！', stats.toJSON());
+  // console.log('构建完成！', stats.toJSON());
 })

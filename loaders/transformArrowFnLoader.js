@@ -5,6 +5,7 @@ const generator = require("@babel/generator").default;
 const t = require("@babel/types");
 
 function transformArrowLoader(sourceCode) {
+
   const ast = parser.parse(sourceCode, {
     sourceType: "module",
   });
