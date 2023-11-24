@@ -9,13 +9,13 @@ class CustomWebpackPlugin {
 
     // 清除 build 目录
     hooks.emit.tap("custom-webpack-plugin", (compilation) => {
-      fs.removeSync(outputPath);
+      fs.emptyDirSync(outputPath);
     });
 
     // 复制静态资源
-    const otherFilesPath = path.resolve(__dirname, "../src/otherfiles");
+    const otherFilesPath = path.resolve(__dirname, "../public");
     hooks.done.tap("custom-webpack-plugin", (compilation) => {
-      fs.copySync(otherFilesPath, path.resolve(outputPath, "otherfiles"));
+      fs.copySync(otherFilesPath, path.resolve(outputPath, "public"));
     });
   }
 }
