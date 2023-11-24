@@ -546,8 +546,9 @@ class Compiler {
 
 loader 本身是一个函数，接收文件模块内容作为参数，经过改造处理返回新的文件内容。
 
+1、将箭头函数转为普通函数
+
 ```js
-// loader 本身是一个函数，接收文件模块内容作为参数，经过改造处理返回新的文件内容。
 const parser = require("@babel/parser");
 const traverse = require("@babel/traverse").default;
 const generator = require("@babel/generator").default;
@@ -579,11 +580,105 @@ function transformArrowLoader(sourceCode) {
 module.exports = transformArrowLoader;
 ```
 
+2、将 md 文件转为 html 形式
+
+```js
+const { marked } = require("marked")
+const hljs = require('highlight.js')
+
+module.exports = function (content) {
+  console.log(content)
+  // 给 code 代码添加类名
+  marked.setOptions({
+    highlight: function (code, lang) {
+      return hljs.highlight(lang, code).value
+    }
+  })
+  
+  // 使用 marked 库将我们的 md 内容转成 html 形式
+  const htmlContent = marked(content)
+  // 将 html 转成字符串
+  const innderContent = '`' + htmlContent + '`'
+  const moduleCode = `var code=${innderContent}; export default code`
+
+  return moduleCode
+}
+```
+
+3、将 es6 代码转为 es5 代码
+
+```js
+// webpack 提供了 schema-utils 库可以对参数进行校验
+const { validate } = require('schema-utils')
+// 导入我们配置好的校验规则
+const rule = require('../my-schema/mybabel-schema.json')
+// 导入 babel 的核心
+const babel = require('@babel/core')
+
+module.exports = function (content) {
+  // webpack5 可以通过 this.query 获取参数
+  const options = this.query
+
+  // 对获取的参数进行验证
+  validate(rule, options, {
+    name: 'mybabel-loader'
+  })
+
+  // 设置为异步的loader,来执行回调
+  const callback = this.async()
+
+  // 将 es6 代码转为 es5代码，做异步的事
+  babel.transform(content, options, (err, result) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, result.code)
+    }
+  })
+
+  return content;
+};
+```
+
+```js
+// schema 验证参数
+{
+  "type": "object", 
+  "properties": {
+    "presets": {
+      "type": "array"
+    }
+  }, 
+  "additionalProperties": true
+}
+
+// webpack 配置
+module: {
+  rules: [
+    {
+      // 匹配后缀为 js 的文件，使用 cgx-loader 进行处理
+      test: /\.js$/i,
+      use: {
+        loader: "mybabel-loader",
+        // 没有配置 resolveLoader 需要写明路径
+        // "./my-loader/mybabel-loader.js"
+        options: {
+          // 传递参数
+          presets: ['@babel/preset-env'],
+        }
+      },
+    }
+  ],
+},
+```
+
 
 
 ## Plugin 编写
 
 插件其实就是通过 compiler 可以去订阅 webpack 工作期间不同阶段的 hooks，以此来影响打包结果或者做一些定制操作。
+
+1. 清空文件夹和复制资源
 
 ```js
 const fs = require("fs-extra");
@@ -608,6 +703,95 @@ class CustomWebpackPlugin {
 }
 
 module.exports = CustomWebpackPlugin;
+```
+
+2.  该插件用于打包完成后，发送通知邮件
+
+```js
+const emailTo = require("./utils/send-email");
+/**
+ * 该插件用于打包完成后，发送通知邮件
+ */
+class SendEmailPlugin {
+  constructor(options) {
+    console.log("创建了 SendEmailPlugin 对象~");
+    this.options = options;
+  }
+
+  apply(compiler) {
+    // 因为在打包结束后进行的手续操作，选择 afterDone 钩子函数，
+    compiler.hooks.afterDone.tap("SendEmailPlugin", (stats) => {
+      // 发送通知邮件
+      const { fromEmail, password, toEmail, host } = this.options;
+      if (!fromEmail || !password || !toEmail || !host) {
+        console.log("邮件配置参数错误！");
+      } else if (stats) {
+        const subject = stats.hasErrors()
+          ? "[ERROR]webpack打包失败"
+          : "[SUCCESS]webpack打包成功";
+        const html =
+          stats.toString() +
+          `<br><div>${
+            "打包时间：" +
+            new Date(stats.startTime).toLocaleString() +
+            "-" +
+            new Date(stats.endTime).toLocaleString()
+          }</div>`;
+        emailTo(
+          host,
+          fromEmail,
+          password,
+          toEmail,
+          subject,
+          html,
+          function (data) {
+            console.log(data);
+          }
+        );
+      }
+    });
+  }
+}
+
+module.exports = SendEmailPlugin;
+```
+
+3. 该插件用于打包目录时生成一个 filelist.md 文件，文件的内容是将所有的构建生成文件展示在一个列表中。
+
+```js
+class GenerateMdPlugin {
+  constructor() {
+    console.log("创建了 GenerateMdPlugin 对象~");
+  }
+
+  apply(compiler) {
+    // 选择 emit 钩子来注册 hook 事件：因为该生命周期是资源文件输入到目标目录时
+    compiler.hooks.emit.tapAsync(
+      "GenerateMdPlugin",
+      (compilation, callback) => {
+        var filelist = "In this build: \n";
+
+        // 通过 compilation 实例遍历访问所有编译过的资源文件
+        for (const filename in compilation.assets) {
+          filelist = filelist + "-" + filename + "\n";
+        }
+
+        // 将 filelist 的内容作为一个新的文件资源，插入到 webpack 构建中
+        compilation.assets["filelist.md"] = {
+          source() {
+            return filelist;
+          },
+          size() {
+            return filelist.length;
+          },
+        };
+        callback();
+      }
+    );
+  }
+}
+
+module.exports = GenerateMdPlugin;
 ```
 
 
